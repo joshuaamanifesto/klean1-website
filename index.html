@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANIFESTO — Timepieces of Legacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-pale: #f5e9c8;
+    --black: #080808;
+    --charcoal: #111111;
+    --dark: #1a1a1a;
+    --mid: #2a2a2a;
+    --text: #e8e0d0;
+    --muted: #8a8070;
+    --white: #faf8f3;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+  }
+  body:hover .cursor-ring { opacity: 1; }
+  a:hover ~ .cursor, button:hover ~ .cursor { width: 14px; height: 14px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 60px;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
+    transition: padding 0.4s, background 0.4s;
+  }
+  nav.scrolled {
+    padding: 18px 60px;
+    background: rgba(8,8,8,0.97);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-decoration: none;
+    cursor: none;
+  }
+  .nav-logo span { color: var(--white); }
+  .nav-links { display: flex; gap: 48px; list-style: none; }
+  .nav-links a {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    position: relative;
+    cursor: none;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta {
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--black); background: var(--gold);
+    border: none; padding: 12px 28px;
+    cursor: none; transition: background 0.3s, transform 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* ─── PAGES ─── */
+  .page { display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .page.active { display: block; opacity: 1; transform: translateY(0); }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(201,168,76,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
+      var(--black);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    animation: gridDrift 20s linear infinite;
+  }
+  @keyframes gridDrift { 0% { transform: translateY(0); } 100% { transform: translateY(80px); } }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 60px;
+    max-width: 700px;
+    animation: heroReveal 1.2s ease forwards;
+  }
+  @keyframes heroReveal {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow {
+    font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(56px, 8vw, 120px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .hero-title em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold);
+    font-size: 1.1em;
+  }
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 28px);
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .hero-desc {
+    font-size: 13px; line-height: 2; letter-spacing: 0.5px;
+    color: rgba(232,224,208,0.6);
+    max-width: 420px;
+    margin-bottom: 56px;
+  }
+  .hero-buttons { display: flex; gap: 20px; align-items: center; }
+  .btn-primary {
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--black); background: var(--gold);
+    border: none; padding: 18px 44px;
+    cursor: none; transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold-light);
+    transform: translateX(-100%); transition: transform 0.4s ease;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-outline {
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); background: transparent;
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 18px 44px; cursor: none;
+    transition: all 0.3s;
+  }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+
+  /* Hero watch visual */
+  .hero-watch {
+    position: absolute; right: 5%; top: 50%;
+    transform: translateY(-50%);
+    width: clamp(300px, 38vw, 600px);
+    animation: watchFloat 6s ease-in-out infinite;
+    opacity: 0.9;
+  }
+  @keyframes watchFloat {
+    0%, 100% { transform: translateY(-50%) rotate(0deg); }
+    50% { transform: translateY(calc(-50% - 18px)) rotate(1.5deg); }
+  }
+
+  .watch-svg-wrap {
+    position: relative;
+    width: 100%; padding-bottom: 130%;
+  }
+  .watch-svg-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* Hero scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+    animation: fadeInUp 2s 1.5s both;
+  }
+  .scroll-hint-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* ─── SECTIONS SHARED ─── */
+  section { padding: 120px 60px; }
+  .section-label {
+    font-size: 9px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold);
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-label::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 600; line-height: 1.1;
+    color: var(--white); margin-bottom: 20px;
+  }
+  .section-title em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; color: var(--gold); font-weight: 300;
+  }
+  .divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 24px 0;
+  }
+
+  /* ─── COLLECTION PAGE ─── */
+  .collection-intro { max-width: 540px; margin-bottom: 80px; }
+  .collection-intro p { font-size: 14px; line-height: 2; color: rgba(232,224,208,0.6); }
+
+  .watches-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .watch-card {
+    background: var(--charcoal);
+    position: relative; overflow: hidden;
+    cursor: none;
+    group: true;
+  }
+  .watch-card:first-child { grid-row: span 2; }
+
+  .watch-card-img {
+    width: 100%; aspect-ratio: 3/4;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+    background: radial-gradient(ellipse at center, var(--dark) 0%, var(--charcoal) 100%);
+  }
+  .watch-card:first-child .watch-card-img { aspect-ratio: 3/5; }
+  .watch-card-img svg {
+    width: 60%; height: auto;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: drop-shadow(0 20px 60px rgba(201,168,76,0.2));
+  }
+  .watch-card:hover .watch-card-img svg { transform: scale(1.08) rotate(3deg); }
+  .watch-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, transparent 60%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 32px;
+    transform: translateY(30%); transition: transform 0.5s ease;
+  }
+  .watch-card:hover .watch-card-overlay { transform: translateY(0); }
+  .watch-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 18px; font-weight: 600; letter-spacing: 2px;
+    color: var(--white); margin-bottom: 6px;
+  }
+  .watch-card-series {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 14px;
+  }
+  .watch-card-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; color: var(--gold-pale);
+  }
+  .watch-card-btn {
+    margin-top: 16px;
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); background: transparent;
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 10px 24px; width: fit-content;
+    cursor: none; transition: all 0.3s;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.4s 0.1s, transform 0.4s 0.1s, background 0.3s, border 0.3s;
+  }
+  .watch-card:hover .watch-card-btn { opacity: 1; transform: translateY(0); }
+  .watch-card-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+  /* Collection Filter */
+  .collection-filters {
+    display: flex; gap: 4px; margin-bottom: 60px;
+  }
+  .filter-btn {
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); background: transparent;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 10px 22px; cursor: none; transition: all 0.3s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    color: var(--gold); border-color: rgba(201,168,76,0.3);
+    background: rgba(201,168,76,0.04);
+  }
+
+  /* ─── HERITAGE PAGE ─── */
+  .heritage-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px; align-items: center;
+  }
+  .heritage-visual {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .heritage-ring {
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.15);
+    position: absolute;
+    animation: rotateSlow 30s linear infinite;
+  }
+  .heritage-ring:nth-child(2) {
+    width: 320px; height: 320px;
+    border-color: rgba(201,168,76,0.08);
+    animation-direction: reverse; animation-duration: 20s;
+  }
+  .heritage-ring:nth-child(3) {
+    width: 240px; height: 240px;
+    border-color: rgba(201,168,76,0.12);
+    animation-duration: 15s;
+  }
+  @keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .heritage-ring-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    position: absolute; top: -3px; left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 12px var(--gold);
+  }
+  .heritage-watch-center { position: relative; z-index: 2; }
+  .heritage-watch-center svg { width: 220px; filter: drop-shadow(0 0 40px rgba(201,168,76,0.3)); }
+
+  .heritage-text h2 { margin-bottom: 30px; }
+  .heritage-text p { font-size: 14px; line-height: 2.2; color: rgba(232,224,208,0.6); margin-bottom: 24px; }
+  .heritage-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px; margin-top: 56px;
+  }
+  .stat-box {
+    background: var(--charcoal);
+    padding: 32px 28px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s;
+  }
+  .stat-box:hover { border-color: var(--gold); }
+  .stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 42px; font-weight: 600;
+    color: var(--gold); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
+
+  /* Timeline */
+  .timeline { margin-top: 120px; }
+  .timeline-title {
+    font-family: 'Cinzel', serif;
+    font-size: 36px; color: var(--white);
+    text-align: center; margin-bottom: 80px;
+  }
+  .timeline-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .timeline-item {
+    background: var(--charcoal);
+    padding: 48px 32px;
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+  }
+  .timeline-item::before {
+    content: attr(data-year);
+    position: absolute; top: -20px; right: -10px;
+    font-family: 'Cinzel', serif;
+    font-size: 80px; font-weight: 700;
+    color: rgba(201,168,76,0.05);
+    pointer-events: none;
+  }
+  .timeline-item:hover { background: var(--dark); }
+  .timeline-year {
+    font-family: 'Cinzel', serif;
+    font-size: 28px; color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .timeline-event { font-size: 12px; line-height: 1.8; color: rgba(232,224,208,0.6); }
+
+  /* ─── ATELIER PAGE ─── */
+  .atelier-hero {
+    text-align: center; max-width: 700px; margin: 0 auto 100px;
+  }
+  .atelier-hero p { font-size: 16px; line-height: 2; color: rgba(232,224,208,0.6); }
+
+  .craft-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-bottom: 120px;
+  }
+  .craft-item {
+    background: var(--charcoal);
+    padding: 60px 40px;
+    position: relative; overflow: hidden;
+    cursor: none; transition: background 0.4s;
+  }
+  .craft-item::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 2px; background: var(--gold);
+    transition: width 0.5s ease;
+  }
+  .craft-item:hover::after { width: 100%; }
+  .craft-item:hover { background: var(--dark); }
+  .craft-num {
+    font-family: 'Cinzel', serif;
+    font-size: 11px; letter-spacing: 4px;
+    color: rgba(201,168,76,0.4); margin-bottom: 32px;
+  }
+  .craft-name {
+    font-family: 'Cinzel', serif;
+    font-size: 22px; color: var(--white);
+    margin-bottom: 16px;
+  }
+  .craft-desc { font-size: 13px; line-height: 2; color: rgba(232,224,208,0.5); }
+
+  .material-strip {
+    display: flex; align-items: stretch;
+    gap: 2px; overflow: hidden;
+  }
+  .material-item {
+    flex: 1; background: var(--charcoal);
+    padding: 48px 32px;
+    transition: flex 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.3s;
+    cursor: none;
+  }
+  .material-item:hover { flex: 2; background: var(--dark); }
+  .material-icon {
+    width: 40px; height: 40px;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    color: var(--gold); font-size: 18px;
+  }
+  .material-name {
+    font-family: 'Cinzel', serif;
+    font-size: 16px; color: var(--white); margin-bottom: 12px;
+  }
+  .material-desc { font-size: 12px; line-height: 1.8; color: var(--muted); }
+
+  /* ─── CONTACT PAGE ─── */
+  .contact-layout {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 100px; align-items: start;
+  }
+  .contact-info { padding-top: 10px; }
+  .contact-info p { font-size: 14px; line-height: 2; color: rgba(232,224,208,0.6); margin-bottom: 56px; }
+  .contact-details { display: flex; flex-direction: column; gap: 32px; }
+  .contact-detail-item { display: flex; gap: 24px; align-items: flex-start; }
+  .contact-detail-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+  }
+  .contact-detail-text { font-size: 12px; line-height: 1.8; color: var(--muted); }
+  .contact-detail-text strong { display: block; color: var(--white); font-weight: 400; margin-bottom: 4px; letter-spacing: 1px; }
+
+  .contact-form { background: var(--charcoal); padding: 56px; }
+  .form-title {
+    font-family: 'Cinzel', serif; font-size: 22px;
+    color: var(--white); margin-bottom: 40px;
+  }
+  .form-group { margin-bottom: 28px; }
+  .form-group label {
+    display: block; font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; background: var(--dark);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: var(--text); font-family: 'Raleway', sans-serif;
+    font-size: 13px; padding: 14px 18px;
+    outline: none; transition: border-color 0.3s;
+    resize: none; appearance: none;
+    cursor: none;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: rgba(201,168,76,0.4);
+  }
+  .form-group textarea { height: 120px; }
+  .form-submit {
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--black); background: var(--gold);
+    border: none; padding: 18px;
+    cursor: none; transition: background 0.3s;
+    margin-top: 8px;
+  }
+  .form-submit:hover { background: var(--gold-light); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--charcoal);
+    padding: 80px 60px 40px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px; padding-bottom: 60px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 40px;
+  }
+  .footer-brand .footer-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 20px; font-weight: 700;
+    letter-spacing: 5px; color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .footer-brand p { font-size: 12px; line-height: 2; color: var(--muted); max-width: 280px; }
+  .footer-col h4 {
+    font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col ul a {
+    font-size: 12px; color: var(--muted);
+    text-decoration: none; cursor: none; transition: color 0.3s;
+  }
+  .footer-col ul a:hover { color: var(--text); }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-copy { font-size: 11px; color: rgba(138,128,112,0.5); }
+  .footer-gold-line {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 14px; color: var(--gold);
+    opacity: 0.5;
+  }
+
+  /* Marquee */
+  .marquee-wrap {
+    overflow: hidden; border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    padding: 20px 0; background: var(--charcoal);
+  }
+  .marquee-track {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: marqueeSlide 20s linear infinite;
+  }
+  @keyframes marqueeSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-item {
+    display: inline-flex; align-items: center; gap: 24px;
+    padding: 0 40px;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .marquee-item::before { content: '◆'; color: var(--gold); font-size: 7px; }
+
+  /* ─── LOADING ─── */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--black);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 9000;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #loader.hide { opacity: 0; visibility: hidden; }
+  .loader-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 28px; font-weight: 700; letter-spacing: 10px;
+    color: var(--gold); margin-bottom: 50px;
+    animation: logoPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes logoPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .loader-bar-wrap {
+    width: 200px; height: 1px;
+    background: rgba(201,168,76,0.15);
+  }
+  .loader-bar {
+    height: 100%; background: var(--gold);
+    animation: loadFill 1.8s ease forwards;
+  }
+  @keyframes loadFill { from { width: 0; } to { width: 100%; } }
+
+  /* Page transition */
+  .page-transition {
+    position: fixed; inset: 0; background: var(--black);
+    z-index: 8000; transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.4s cubic-bezier(0.7,0,0.3,1);
+    pointer-events: none;
+  }
+  .page-transition.entering { transform: scaleY(1); transform-origin: bottom; }
+  .page-transition.leaving { transform: scaleY(0); transform-origin: top; }
+
+  /* Reveal animations */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 1024px) {
+    nav { padding: 24px 30px; }
+    nav.scrolled { padding: 16px 30px; }
+    .nav-links { gap: 28px; }
+    section { padding: 80px 30px; }
+    .hero-content { padding: 0 30px; }
+    .hero-watch { width: 35vw; opacity: 0.6; }
+    .watches-grid { grid-template-columns: 1fr 1fr; }
+    .watch-card:first-child { grid-row: span 1; }
+    .heritage-layout { grid-template-columns: 1fr; gap: 60px; }
+    .contact-layout { grid-template-columns: 1fr; gap: 60px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .timeline-items { grid-template-columns: 1fr 1fr; }
+    .craft-grid { grid-template-columns: 1fr; }
+    footer { padding: 60px 30px 30px; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-logo { font-size: 16px; }
+    .nav-links { display: none; }
+    .hero-watch { display: none; }
+    .watches-grid { grid-template-columns: 1fr; }
+    .heritage-stats { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .material-strip { flex-direction: column; }
+    .timeline-items { grid-template-columns: 1fr; }
+    .collection-filters { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-logo">MANIFESTO</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- Page Transition -->
+<div class="page-transition" id="pageTransition"></div>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo" onclick="navigateTo('home'); return false;">MANI<span>FESTO</span></a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="navigateTo('home'); return false;" data-page="home" class="active">Home</a></li>
+    <li><a href="#" onclick="navigateTo('collection'); return false;" data-page="collection">Collection</a></li>
+    <li><a href="#" onclick="navigateTo('heritage'); return false;" data-page="heritage">Heritage</a></li>
+    <li><a href="#" onclick="navigateTo('atelier'); return false;" data-page="atelier">Atelier</a></li>
+    <li><a href="#" onclick="navigateTo('contact'); return false;" data-page="contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="navigateTo('collection'); return false;">Discover Watches</button>
+</nav>
+
+<!-- ═══════════════════════════ HOME PAGE ═══════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">Since 1892 — Swiss Manufacture</div>
+      <h1 class="hero-title">TIME IS<br><em>Art.</em></h1>
+      <p class="hero-subtitle">Where precision meets eternity.</p>
+      <p class="hero-desc">Each Manifesto timepiece is a declaration — of craftsmanship perfected over generations, of materials chosen for their soul, and of time rendered as a living sculpture upon your wrist.</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="navigateTo('collection')"><span>Explore Collection</span></button>
+        <button class="btn-outline" onclick="navigateTo('heritage')">Our Heritage</button>
+      </div>
+    </div>
+
+    <!-- SVG Watch -->
+    <div class="hero-watch">
+      <div class="watch-svg-wrap">
+        <svg viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
+          <!-- Strap top -->
+          <rect x="155" y="10" width="90" height="110" rx="8" fill="#1a1510"/>
+          <rect x="163" y="15" width="74" height="100" rx="6" fill="#141008"/>
+          <!-- Strap buckle detail -->
+          <rect x="185" y="18" width="30" height="4" rx="2" fill="#c9a84c" opacity="0.4"/>
+          <rect x="185" y="26" width="30" height="4" rx="2" fill="#c9a84c" opacity="0.3"/>
+          <rect x="185" y="34" width="30" height="4" rx="2" fill="#c9a84c" opacity="0.2"/>
+
+          <!-- Strap bottom -->
+          <rect x="155" y="400" width="90" height="110" rx="8" fill="#1a1510"/>
+          <rect x="163" y="405" width="74" height="100" rx="6" fill="#141008"/>
+          <rect x="185" y="478" width="30" height="4" rx="2" fill="#c9a84c" opacity="0.4"/>
+          <rect x="185" y="486" width="30" height="4" rx="2" fill="#c9a84c" opacity="0.3"/>
+          <rect x="185" y="494" width="30" height="4" rx="2" fill="#c9a84c" opacity="0.2"/>
+
+          <!-- Case outer -->
+          <rect x="60" y="110" width="280" height="300" rx="48" fill="#2a2520"/>
+          <!-- Case middle -->
+          <rect x="68" y="118" width="264" height="284" rx="42" fill="url(#caseGrad)"/>
+          <!-- Bezel -->
+          <rect x="80" y="130" width="240" height="260" rx="38" fill="url(#bezelGrad)"/>
+          <!-- Crown -->
+          <rect x="340" y="238" width="24" height="44" rx="6" fill="#3a3530"/>
+          <rect x="343" y="243" width="18" height="34" rx="4" fill="#2a2520"/>
+          <rect x="346" y="248" width="12" height="6" rx="1" fill="#c9a84c" opacity="0.5"/>
+          <rect x="346" y="258" width="12" height="6" rx="1" fill="#c9a84c" opacity="0.3"/>
+          <rect x="346" y="268" width="12" height="6" rx="1" fill="#c9a84c" opacity="0.2"/>
+
+          <!-- Dial -->
+          <circle cx="200" cy="260" r="100" fill="url(#dialGrad)"/>
+          <!-- Dial outer ring -->
+          <circle cx="200" cy="260" r="100" fill="none" stroke="#c9a84c" stroke-width="0.5" opacity="0.6"/>
+          <circle cx="200" cy="260" r="92" fill="none" stroke="#c9a84c" stroke-width="0.3" opacity="0.3"/>
+
+          <!-- Hour markers -->
+          <g fill="#c9a84c" opacity="0.9">
+            <!-- 12 -->
+            <rect x="196" y="167" width="8" height="20" rx="1"/>
+            <!-- 3 -->
+            <rect x="289" y="256" width="20" height="8" rx="1"/>
+            <!-- 6 -->
+            <rect x="196" y="353" width="8" height="20" rx="1"/>
+            <!-- 9 -->
+            <rect x="91" y="256" width="20" height="8" rx="1"/>
+          </g>
+          <!-- Minute markers -->
+          <g fill="#c9a84c" opacity="0.4">
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(30 200 260)"/>
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(60 200 260)"/>
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(120 200 260)"/>
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(150 200 260)"/>
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(210 200 260)"/>
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(240 200 260)"/>
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(300 200 260)"/>
+            <rect x="198" y="170" width="4" height="10" rx="1" transform="rotate(330 200 260)"/>
+          </g>
+
+          <!-- Brand text -->
+          <text x="200" y="232" text-anchor="middle" font-family="'Cinzel', serif" font-size="11" fill="#c9a84c" letter-spacing="5" opacity="0.8">MANIFESTO</text>
+          <text x="200" y="246" text-anchor="middle" font-family="serif" font-size="7" fill="#8a8070" letter-spacing="2">SWISS MADE</text>
+
+          <!-- Sub-dial -->
+          <circle cx="200" cy="295" r="22" fill="rgba(0,0,0,0.3)" stroke="#c9a84c" stroke-width="0.4" opacity="0.6"/>
+          <circle cx="200" cy="295" r="16" fill="none" stroke="#c9a84c" stroke-width="0.2" opacity="0.3"/>
+
+          <!-- Hour hand -->
+          <g id="hourHand" transform-origin="200 260">
+            <rect x="197" y="200" width="6" height="68" rx="3" fill="#e8e0d0"/>
+          </g>
+          <!-- Minute hand -->
+          <g id="minuteHand" transform-origin="200 260">
+            <rect x="198.5" y="178" width="3" height="90" rx="1.5" fill="#c9a84c"/>
+          </g>
+          <!-- Second hand -->
+          <g id="secondHand" transform-origin="200 260">
+            <rect x="199.5" y="166" width="1" height="96" rx="0.5" fill="#ff4444" opacity="0.8"/>
+            <circle cx="200" cy="166" r="2" fill="#ff4444" opacity="0.8"/>
+          </g>
+          <!-- Center dot -->
+          <circle cx="200" cy="260" r="5" fill="#c9a84c"/>
+          <circle cx="200" cy="260" r="2.5" fill="#1a1510"/>
+
+          <!-- Reflection -->
+          <ellipse cx="160" cy="180" rx="40" ry="20" fill="white" opacity="0.04" transform="rotate(-20 160 180)"/>
+
+          <defs>
+            <radialGradient id="dialGrad" cx="40%" cy="35%">
+              <stop offset="0%" stop-color="#1e1c18"/>
+              <stop offset="100%" stop-color="#0c0a08"/>
+            </radialGradient>
+            <linearGradient id="caseGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3a3530"/>
+              <stop offset="50%" stop-color="#1e1c18"/>
+              <stop offset="100%" stop-color="#2a2520"/>
+            </linearGradient>
+            <linearGradient id="bezelGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.15"/>
+              <stop offset="30%" stop-color="#2a2520"/>
+              <stop offset="100%" stop-color="#1a1510"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <div class="scroll-hint-line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Swiss Excellence</span>
+      <span class="marquee-item">Master Horology</span>
+      <span class="marquee-item">Since 1892</span>
+      <span class="marquee-item">Tourbillon Movements</span>
+      <span class="marquee-item">18K Gold</span>
+      <span class="marquee-item">Sapphire Crystal</span>
+      <span class="marquee-item">Swiss Excellence</span>
+      <span class="marquee-item">Master Horology</span>
+      <span class="marquee-item">Since 1892</span>
+      <span class="marquee-item">Tourbillon Movements</span>
+      <span class="marquee-item">18K Gold</span>
+      <span class="marquee-item">Sapphire Crystal</span>
+    </div>
+  </div>
+
+  <!-- Featured Section -->
+  <section style="padding: 120px 60px;">
+    <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:70px; flex-wrap:wrap; gap:30px;">
+      <div>
+        <div class="section-label">Featured Timepieces</div>
+        <h2 class="section-title">The <em>Icons</em></h2>
+      </div>
+      <button class="btn-outline" onclick="navigateTo('collection')" style="margin-bottom:5px;">View All</button>
+    </div>
+
+    <div class="reveal" style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 2px;">
+      <!-- Card 1 -->
+      <div class="watch-card" style="display:flex;flex-direction:column;">
+        <div class="watch-card-img" style="flex:1;">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="80" y="5" width="40" height="50" rx="4" fill="#1a1510"/>
+            <rect x="80" y="205" width="40" height="50" rx="4" fill="#1a1510"/>
+            <rect x="30" y="55" width="140" height="150" rx="24" fill="#2a2520"/>
+            <rect x="36" y="61" width="128" height="138" rx="20" fill="#1a1510"/>
+            <circle cx="100" cy="130" r="55" fill="#0f0d0a"/>
+            <circle cx="100" cy="130" r="55" fill="none" stroke="#c9a84c" stroke-width="0.5"/>
+            <text x="100" y="118" text-anchor="middle" font-family="serif" font-size="7" fill="#c9a84c" letter-spacing="4">MANIFESTO</text>
+            <rect x="97" y="85" width="6" height="48" rx="3" fill="#e8e0d0"/>
+            <rect x="98.5" y="76" width="3" height="60" rx="1.5" fill="#c9a84c"/>
+            <circle cx="100" cy="130" r="4" fill="#c9a84c"/>
+          </svg>
+        </div>
+        <div style="background:var(--charcoal);padding:32px;">
+          <div class="watch-card-series">Sovereign Series</div>
+          <div class="watch-card-name">Aurum I</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-pale);margin-top:8px;">$28,500</div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="watch-card" style="display:flex;flex-direction:column;">
+        <div class="watch-card-img" style="flex:1;">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="80" y="5" width="40" height="50" rx="4" fill="#0d1a15"/>
+            <rect x="80" y="205" width="40" height="50" rx="4" fill="#0d1a15"/>
+            <rect x="30" y="55" width="140" height="150" rx="24" fill="#1a2820"/>
+            <rect x="36" y="61" width="128" height="138" rx="20" fill="#0d1a15"/>
+            <circle cx="100" cy="130" r="55" fill="#060f0a"/>
+            <circle cx="100" cy="130" r="55" fill="none" stroke="#c9a84c" stroke-width="0.5"/>
+            <text x="100" y="118" text-anchor="middle" font-family="serif" font-size="7" fill="#c9a84c" letter-spacing="4">MANIFESTO</text>
+            <rect x="97" y="85" width="6" height="48" rx="3" fill="#e8e0d0"/>
+            <rect x="98.5" y="76" width="3" height="60" rx="1.5" fill="#50c878"/>
+            <circle cx="100" cy="130" r="4" fill="#50c878"/>
+          </svg>
+        </div>
+        <div style="background:var(--charcoal);padding:32px;">
+          <div class="watch-card-series">Verdure Collection</div>
+          <div class="watch-card-name">Forêt Noir</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-pale);margin-top:8px;">$34,000</div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="watch-card" style="display:flex;flex-direction:column;">
+        <div class="watch-card-img" style="flex:1;">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="80" y="5" width="40" height="50" rx="4" fill="#1a1520"/>
+            <rect x="80" y="205" width="40" height="50" rx="4" fill="#1a1520"/>
+            <rect x="30" y="55" width="140" height="150" rx="24" fill="#252030"/>
+            <rect x="36" y="61" width="128" height="138" rx="20" fill="#1a1520"/>
+            <circle cx="100" cy="130" r="55" fill="#0d0a14"/>
+            <circle cx="100" cy="130" r="55" fill="none" stroke="#c9a84c" stroke-width="0.5"/>
+            <text x="100" y="118" text-anchor="middle" font-family="serif" font-size="7" fill="#c9a84c" letter-spacing="4">MANIFESTO</text>
+            <rect x="97" y="85" width="6" height="48" rx="3" fill="#e8e0d0"/>
+            <rect x="98.5" y="76" width="3" height="60" rx="1.5" fill="#9b8ef0"/>
+            <circle cx="100" cy="130" r="4" fill="#9b8ef0"/>
+          </svg>
+        </div>
+        <div style="background:var(--charcoal);padding:32px;">
+          <div class="watch-card-series">Cosmos Edition</div>
+          <div class="watch-card-name">Nuit Éternelle</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-pale);margin-top:8px;">$42,000</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Section -->
+  <section style="padding: 80px 60px; background: var(--charcoal); text-align: center; border-top: 1px solid rgba(201,168,76,0.08); border-bottom: 1px solid rgba(201,168,76,0.08);">
+    <div class="reveal">
+      <div style="font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;">— The Manifesto Creed —</div>
+      <blockquote style="font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,52px);font-weight:300;font-style:italic;color:var(--white);line-height:1.3;max-width:900px;margin:0 auto;">
+        "We do not simply measure time.<br>We <span style="color:var(--gold)">honour</span> it."
+      </blockquote>
+      <div style="font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:24px;">— Henri Lebrun, Founder, 1892</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">MANIFESTO</div>
+        <p>Established in the heart of Geneva, Manifesto has been sculpting time into wearable art for over a century.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Discover</h4>
+        <ul>
+          <li><a href="#" onclick="navigateTo('collection');return false;">Collection</a></li>
+          <li><a href="#" onclick="navigateTo('heritage');return false;">Heritage</a></li>
+          <li><a href="#" onclick="navigateTo('atelier');return false;">Atelier</a></li>
+          <li><a href="#" onclick="navigateTo('contact');return false;">Boutiques</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Bespoke Orders</a></li>
+          <li><a href="#">Servicing</a></li>
+          <li><a href="#">Authentication</a></li>
+          <li><a href="#">Restoration</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2024 Manifesto Timepieces. All rights reserved.</div>
+      <div class="footer-gold-line">Time is the only true luxury.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════ COLLECTION PAGE ═══════════════════════════ -->
+<div class="page" id="page-collection">
+  <section style="padding-top:160px;">
+    <div class="section-label reveal">Our Timepieces</div>
+    <h2 class="section-title reveal">The <em>Collection</em></h2>
+    <div class="divider reveal"></div>
+    <div class="collection-intro reveal">
+      <p>Every watch in the Manifesto collection is a study in extremes — extreme precision, extreme beauty, and the extreme patience of master artisans who dedicate their lives to the infinite language of time.</p>
+    </div>
+
+    <div class="collection-filters reveal">
+      <button class="filter-btn active" onclick="filterWatches(this,'all')">All Pieces</button>
+      <button class="filter-btn" onclick="filterWatches(this,'sovereign')">Sovereign</button>
+      <button class="filter-btn" onclick="filterWatches(this,'verdure')">Verdure</button>
+      <button class="filter-btn" onclick="filterWatches(this,'cosmos')">Cosmos</button>
+      <button class="filter-btn" onclick="filterWatches(this,'tourbillon')">Tourbillon</button>
+    </div>
+
+    <div class="watches-grid reveal" id="watchesGrid">
+
+      <div class="watch-card" data-series="sovereign">
+        <div class="watch-card-img">
+          <svg viewBox="0 0 200 280" style="width:62%;">
+            <rect x="80" y="5" width="40" height="60" rx="5" fill="#1a1510"/>
+            <rect x="80" y="215" width="40" height="60" rx="5" fill="#1a1510"/>
+            <rect x="28" y="58" width="144" height="162" rx="28" fill="#3a3020"/>
+            <rect x="36" y="66" width="128" height="146" rx="22" fill="#1e1a14"/>
+            <circle cx="100" cy="139" r="58" fill="#0f0c08"/>
+            <circle cx="100" cy="139" r="58" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.8"/>
+            <circle cx="100" cy="139" r="52" fill="none" stroke="#c9a84c" stroke-width="0.3" opacity="0.3"/>
+            <!-- Hour markers -->
+            <rect x="97.5" y="84" width="5" height="14" rx="1" fill="#c9a84c"/>
+            <rect x="97.5" y="179" width="5" height="14" rx="1" fill="#c9a84c"/>
+            <rect x="143" y="136.5" width="14" height="5" rx="1" fill="#c9a84c"/>
+            <rect x="43" y="136.5" width="14" height="5" rx="1" fill="#c9a84c"/>
+            <text x="100" y="124" text-anchor="middle" font-family="serif" font-size="8" fill="#c9a84c" letter-spacing="4">MANIFESTO</text>
+            <text x="100" y="136" text-anchor="middle" font-family="serif" font-size="5" fill="#8a8070" letter-spacing="2">GENÈVE</text>
+            <!-- Hands -->
+            <rect x="97" y="90" width="6" height="56" rx="3" fill="#f0e8d8"/>
+            <rect x="98.5" y="80" width="3" height="68" rx="1.5" fill="#c9a84c"/>
+            <rect x="99.2" y="74" width="1.6" height="70" rx="0.8" fill="#ff4444" opacity="0.9"/>
+            <circle cx="100" cy="139" r="5" fill="#c9a84c"/>
+            <circle cx="100" cy="139" r="2" fill="#0f0c08"/>
+          </svg>
+        </div>
+        <div class="watch-card-overlay">
+          <div class="watch-card-series">Sovereign Series</div>
+          <div class="watch-card-name">Grand Classique</div>
+          <div class="watch-card-price">$24,800</div>
+          <button class="watch-card-btn">Enquire Now</button>
+        </div>
+      </div>
+
+      <div class="watch-card" data-series="tourbillon">
+        <div class="watch-card-img">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="80" y="5" width="40" height="50" rx="4" fill="#0a1520"/>
+            <rect x="80" y="205" width="40" height="50" rx="4" fill="#0a1520"/>
+            <rect x="28" y="54" width="144" height="152" rx="26" fill="#0f1e30"/>
+            <circle cx="100" cy="130" r="60" fill="#060e18"/>
+            <circle cx="100" cy="130" r="60" fill="none" stroke="#c9a84c" stroke-width="0.7"/>
+            <!-- Skeleton dial details -->
+            <circle cx="100" cy="130" r="40" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+            <circle cx="100" cy="130" r="20" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.5"/>
+            <!-- Tourbillon -->
+            <circle cx="100" cy="155" r="14" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.7"/>
+            <circle cx="100" cy="155" r="9" fill="none" stroke="#c9a84c" stroke-width="0.5" opacity="0.5"/>
+            <circle cx="100" cy="155" r="3" fill="#c9a84c" opacity="0.7"/>
+            <text x="100" y="118" text-anchor="middle" font-family="serif" font-size="7" fill="#c9a84c" letter-spacing="3">MANIFESTO</text>
+            <text x="100" y="128" text-anchor="middle" font-family="serif" font-size="5" fill="#8a8070" letter-spacing="2">TOURBILLON</text>
+            <rect x="97" y="80" width="6" height="50" rx="3" fill="#e8e0d0"/>
+            <rect x="98.5" y="72" width="3" height="62" rx="1.5" fill="#c9a84c"/>
+            <circle cx="100" cy="130" r="4" fill="#c9a84c"/>
+          </svg>
+        </div>
+        <div class="watch-card-overlay">
+          <div class="watch-card-series">Tourbillon Master</div>
+          <div class="watch-card-name">Ciel Bleu</div>
+          <div class="watch-card-price">$68,000</div>
+          <button class="watch-card-btn">Enquire Now</button>
+        </div>
+      </div>
+
+      <div class="watch-card" data-series="cosmos">
+        <div class="watch-card-img">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="82" y="5" width="36" height="50" rx="4" fill="#0d0a1a"/>
+            <rect x="82" y="205" width="36" height="50" rx="4" fill="#0d0a1a"/>
+            <rect x="30" y="54" width="140" height="152" rx="24" fill="#181228"/>
+            <rect x="38" y="62" width="124" height="136" rx="18" fill="#0d0a1a"/>
+            <circle cx="100" cy="130" r="56" fill="radial-gradient(circle, #1a1030 0%, #060310 100%)"/>
+            <circle cx="100" cy="130" r="56" fill="none" stroke="#9b8ef0" stroke-width="0.6"/>
+            <!-- Stars -->
+            <circle cx="115" cy="105" r="1" fill="white" opacity="0.6"/>
+            <circle cx="80" cy="112" r="0.8" fill="white" opacity="0.5"/>
+            <circle cx="125" cy="140" r="1.2" fill="white" opacity="0.7"/>
+            <circle cx="76" cy="148" r="0.6" fill="white" opacity="0.4"/>
+            <circle cx="108" cy="160" r="0.9" fill="white" opacity="0.5"/>
+            <text x="100" y="118" text-anchor="middle" font-family="serif" font-size="7" fill="#9b8ef0" letter-spacing="3">MANIFESTO</text>
+            <text x="100" y="128" text-anchor="middle" font-family="serif" font-size="5" fill="#6a6080" letter-spacing="2">COSMOS</text>
+            <rect x="97" y="82" width="6" height="50" rx="3" fill="#e0dcf0"/>
+            <rect x="98.5" y="74" width="3" height="60" rx="1.5" fill="#9b8ef0"/>
+            <circle cx="100" cy="130" r="5" fill="#9b8ef0"/>
+          </svg>
+        </div>
+        <div class="watch-card-overlay">
+          <div class="watch-card-series">Cosmos Edition</div>
+          <div class="watch-card-name">Nuit Éternelle</div>
+          <div class="watch-card-price">$42,000</div>
+          <button class="watch-card-btn">Enquire Now</button>
+        </div>
+      </div>
+
+      <div class="watch-card" data-series="sovereign">
+        <div class="watch-card-img">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="82" y="5" width="36" height="50" rx="4" fill="#1a1008"/>
+            <rect x="82" y="205" width="36" height="50" rx="4" fill="#1a1008"/>
+            <rect x="30" y="54" width="140" height="152" rx="24" fill="#302510"/>
+            <rect x="38" y="62" width="124" height="136" rx="18" fill="#1a1008"/>
+            <circle cx="100" cy="130" r="56" fill="#0f0a04"/>
+            <circle cx="100" cy="130" r="56" fill="none" stroke="#c9a84c" stroke-width="0.8"/>
+            <text x="100" y="118" text-anchor="middle" font-family="serif" font-size="7" fill="#c9a84c" letter-spacing="3">MANIFESTO</text>
+            <text x="100" y="128" text-anchor="middle" font-family="serif" font-size="5" fill="#8a8070" letter-spacing="2">PERPETUAL</text>
+            <!-- Moon phase -->
+            <circle cx="100" cy="152" r="14" fill="#1a1008" stroke="#c9a84c" stroke-width="0.5" opacity="0.6"/>
+            <circle cx="106" cy="152" r="12" fill="#0f0a04"/>
+            <circle cx="95" cy="148" r="1.5" fill="#c9a84c" opacity="0.6"/>
+            <circle cx="104" cy="143" r="1" fill="#c9a84c" opacity="0.4"/>
+            <rect x="97" y="82" width="6" height="50" rx="3" fill="#f0e8d0"/>
+            <rect x="98.5" y="74" width="3" height="60" rx="1.5" fill="#c9a84c"/>
+            <circle cx="100" cy="130" r="4" fill="#c9a84c"/>
+          </svg>
+        </div>
+        <div class="watch-card-overlay">
+          <div class="watch-card-series">Sovereign Series</div>
+          <div class="watch-card-name">Lunaire</div>
+          <div class="watch-card-price">$38,500</div>
+          <button class="watch-card-btn">Enquire Now</button>
+        </div>
+      </div>
+
+      <div class="watch-card" data-series="verdure">
+        <div class="watch-card-img">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="82" y="5" width="36" height="50" rx="4" fill="#0a1a10"/>
+            <rect x="82" y="205" width="36" height="50" rx="4" fill="#0a1a10"/>
+            <rect x="30" y="54" width="140" height="152" rx="24" fill="#102815"/>
+            <rect x="38" y="62" width="124" height="136" rx="18" fill="#0a1a10"/>
+            <circle cx="100" cy="130" r="56" fill="#060f08"/>
+            <circle cx="100" cy="130" r="56" fill="none" stroke="#50c878" stroke-width="0.6"/>
+            <text x="100" y="118" text-anchor="middle" font-family="serif" font-size="7" fill="#50c878" letter-spacing="3">MANIFESTO</text>
+            <text x="100" y="128" text-anchor="middle" font-family="serif" font-size="5" fill="#406050" letter-spacing="2">VERDURE</text>
+            <rect x="97" y="82" width="6" height="50" rx="3" fill="#d0e8d8"/>
+            <rect x="98.5" y="74" width="3" height="60" rx="1.5" fill="#50c878"/>
+            <circle cx="100" cy="130" r="4" fill="#50c878"/>
+          </svg>
+        </div>
+        <div class="watch-card-overlay">
+          <div class="watch-card-series">Verdure Collection</div>
+          <div class="watch-card-name">Forêt Sacré</div>
+          <div class="watch-card-price">$31,200</div>
+          <button class="watch-card-btn">Enquire Now</button>
+        </div>
+      </div>
+
+      <div class="watch-card" data-series="tourbillon">
+        <div class="watch-card-img">
+          <svg viewBox="0 0 200 260" style="width:55%;">
+            <rect x="82" y="5" width="36" height="50" rx="4" fill="#1a0a0a"/>
+            <rect x="82" y="205" width="36" height="50" rx="4" fill="#1a0a0a"/>
+            <rect x="30" y="54" width="140" height="152" rx="24" fill="#280f0f"/>
+            <rect x="38" y="62" width="124" height="136" rx="18" fill="#1a0a0a"/>
+            <circle cx="100" cy="130" r="56" fill="#100606"/>
+            <circle cx="100" cy="130" r="56" fill="none" stroke="#c9a84c" stroke-width="0.8"/>
+            <!-- Skeleton bridges -->
+            <line x1="100" y1="78" x2="100" y2="182" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+            <line x1="48" y1="130" x2="152" y2="130" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+            <circle cx="100" cy="130" r="35" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+            <text x="100" y="112" text-anchor="middle" font-family="serif" font-size="6" fill="#c9a84c" letter-spacing="3">MANIFESTO</text>
+            <text x="100" y="120" text-anchor="middle" font-family="serif" font-size="4" fill="#8a8070" letter-spacing="2">SKELETON</text>
+            <rect x="97" y="82" width="6" height="50" rx="3" fill="#f0e0d0" opacity="0.8"/>
+            <rect x="98.5" y="74" width="3" height="60" rx="1.5" fill="#c9a84c"/>
+            <circle cx="100" cy="130" r="4" fill="#c9a84c"/>
+          </svg>
+        </div>
+        <div class="watch-card-overlay">
+          <div class="watch-card-series">Tourbillon Master</div>
+          <div class="watch-card-name">Squelette Rouge</div>
+          <div class="watch-card-price">$55,000</div>
+          <button class="watch-card-btn">Enquire Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">MANIFESTO</div>
+        <p>Every piece is a statement. Every second, a declaration.</p>
+      </div>
+      <div class="footer-col"><h4>Navigate</h4><ul>
+        <li><a href="#" onclick="navigateTo('home');return false;">Home</a></li>
+        <li><a href="#" onclick="navigateTo('heritage');return false;">Heritage</a></li>
+        <li><a href="#" onclick="navigateTo('atelier');return false;">Atelier</a></li>
+        <li><a href="#" onclick="navigateTo('contact');return false;">Contact</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Collection</h4><ul>
+        <li><a href="#">Sovereign Series</a></li><li><a href="#">Verdure</a></li>
+        <li><a href="#">Cosmos</a></li><li><a href="#">Tourbillon</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Services</h4><ul>
+        <li><a href="#">Bespoke</a></li><li><a href="#">Servicing</a></li>
+        <li><a href="#">Authentication</a></li><li><a href="#">Restoration</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2024 Manifesto Timepieces.</div>
+      <div class="footer-gold-line">Time is the only true luxury.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════ HERITAGE PAGE ═══════════════════════════ -->
+<div class="page" id="page-heritage">
+  <section style="padding-top:160px;">
+    <div class="heritage-layout">
+      <div class="heritage-visual reveal">
+        <div class="heritage-ring"><div class="heritage-ring-dot"></div></div>
+        <div class="heritage-ring"><div class="heritage-ring-dot"></div></div>
+        <div class="heritage-ring"><div class="heritage-ring-dot"></div></div>
+        <div class="heritage-watch-center">
+          <svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="80" y="5" width="40" height="52" rx="5" fill="#1a1510"/>
+            <rect x="80" y="203" width="40" height="52" rx="5" fill="#1a1510"/>
+            <rect x="28" y="56" width="144" height="148" rx="26" fill="#2a2520"/>
+            <rect x="36" y="64" width="128" height="132" rx="20" fill="#1a1510"/>
+            <circle cx="100" cy="130" r="56" fill="#0f0c08"/>
+            <circle cx="100" cy="130" r="56" fill="none" stroke="#c9a84c" stroke-width="1"/>
+            <circle cx="100" cy="130" r="50" fill="none" stroke="#c9a84c" stroke-width="0.3" opacity="0.3"/>
+            <rect x="97.5" y="76" width="5" height="16" rx="1.5" fill="#c9a84c"/>
+            <rect x="97.5" y="178" width="5" height="16" rx="1.5" fill="#c9a84c"/>
+            <rect x="140" y="127.5" width="16" height="5" rx="1.5" fill="#c9a84c"/>
+            <rect x="44" y="127.5" width="16" height="5" rx="1.5" fill="#c9a84c"/>
+            <text x="100" y="116" text-anchor="middle" font-family="serif" font-size="9" fill="#c9a84c" letter-spacing="5">MANIFESTO</text>
+            <text x="100" y="128" text-anchor="middle" font-family="serif" font-size="5.5" fill="#8a8070" letter-spacing="2">GENÈVE — EST. 1892</text>
+            <rect x="96.5" y="84" width="7" height="54" rx="3.5" fill="#f0e8d8"/>
+            <rect x="98.5" y="74" width="3" height="66" rx="1.5" fill="#c9a84c"/>
+            <rect x="99.3" y="70" width="1.4" height="64" rx="0.7" fill="#ff4444" opacity="0.85"/>
+            <circle cx="100" cy="130" r="5.5" fill="#c9a84c"/>
+            <circle cx="100" cy="130" r="2.5" fill="#0f0c08"/>
+          </svg>
+        </div>
+      </div>
+      <div class="heritage-text reveal">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title">A Century of<br><em>Excellence</em></h2>
+        <div class="divider"></div>
+        <p>In 1892, master watchmaker Henri Lebrun founded Manifesto in Geneva with a single belief: that time, properly honoured, becomes art. Working from a modest atelier on the banks of Lake Geneva, Lebrun perfected a movement so precise it shocked the watchmaking establishment.</p>
+        <p>Over 130 years, Manifesto has remained fiercely independent — never acquired, never compromised. Every movement is still assembled by hand in our original Geneva manufactory, where the philosophy of Henri Lebrun lives in every tick.</p>
+        <div class="heritage-stats">
+          <div class="stat-box"><div class="stat-num">132</div><div class="stat-label">Years of Heritage</div></div>
+          <div class="stat-box"><div class="stat-num">47</div><div class="stat-label">Master Craftsmen</div></div>
+          <div class="stat-box"><div class="stat-num">12</div><div class="stat-label">Patents Held</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Generations</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="timeline-title">Milestones in <em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);">Time</em></div>
+      <div class="timeline-items">
+        <div class="timeline-item" data-year="1892">
+          <div class="timeline-year">1892</div>
+          <div class="timeline-event">Henri Lebrun founds Manifesto in Geneva, introducing the calibre ML-01 — a movement accurate to 2 seconds per day.</div>
+        </div>
+        <div class="timeline-item" data-year="1924">
+          <div class="timeline-year">1924</div>
+          <div class="timeline-event">Manifesto unveils the Grand Perpetual, the first perpetual calendar movement to account for centennial leap years.</div>
+        </div>
+        <div class="timeline-item" data-year="1968">
+          <div class="timeline-year">1968</div>
+          <div class="timeline-event">Third-generation Pierre Lebrun introduces the revolutionary flying tourbillon with sapphire crystal bridges — a world first.</div>
+        </div>
+        <div class="timeline-item" data-year="2012">
+          <div class="timeline-year">2012</div>
+          <div class="timeline-event">The centennial Cosmos collection launches to worldwide acclaim, fusing meteorite dials with proprietary micro-rotor movements.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="footer-logo">MANIFESTO</div><p>132 years of uncompromised watchmaking excellence from Geneva.</p></div>
+      <div class="footer-col"><h4>Navigate</h4><ul>
+        <li><a href="#" onclick="navigateTo('home');return false;">Home</a></li>
+        <li><a href="#" onclick="navigateTo('collection');return false;">Collection</a></li>
+        <li><a href="#" onclick="navigateTo('atelier');return false;">Atelier</a></li>
+        <li><a href="#" onclick="navigateTo('contact');return false;">Contact</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Heritage</h4><ul>
+        <li><a href="#">Founders</a></li><li><a href="#">Milestones</a></li>
+        <li><a href="#">Philosophy</a></li><li><a href="#">Awards</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Press</h4><ul>
+        <li><a href="#">Media Kit</a></li><li><a href="#">Press Releases</a></li>
+        <li><a href="#">Interviews</a></li><li><a href="#">Events</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2024 Manifesto Timepieces.</div>
+      <div class="footer-gold-line">Time is the only true luxury.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════ ATELIER PAGE ═══════════════════════════ -->
+<div class="page" id="page-atelier">
+  <section style="padding-top:160px;">
+    <div class="atelier-hero reveal">
+      <div class="section-label" style="justify-content:center;">The Craft</div>
+      <h2 class="section-title" style="text-align:center;">Inside the <em>Atelier</em></h2>
+      <div class="divider" style="margin:24px auto;"></div>
+      <p>Our Geneva manufactory is where obsession becomes precision. 47 master craftsmen, each with decades of dedication, transform raw gold and steel into mechanisms so refined they seem to defy the laws of physics.</p>
+    </div>
+
+    <div class="craft-grid reveal">
+      <div class="craft-item">
+        <div class="craft-num">01</div>
+        <div class="craft-name">Movement Assembly</div>
+        <div class="craft-desc">Each movement comprises between 280 and 650 individual components, assembled under 10x magnification by a single watchmaker over 4 to 8 weeks. No component touches a machine once the assembly begins.</div>
+      </div>
+      <div class="craft-item">
+        <div class="craft-num">02</div>
+        <div class="craft-name">Dial Creation</div>
+        <div class="craft-desc">Our dials are painted, fired, and finished across seven stages. Grand feu enamel dials take up to three months — each one unique, bearing the microscopic fingerprints of its creator.</div>
+      </div>
+      <div class="craft-item">
+        <div class="craft-num">03</div>
+        <div class="craft-name">Case Finishing</div>
+        <div class="craft-desc">From raw 18K gold to mirror polish, a Manifesto case passes through 23 distinct finishing operations. The transition between brushed and polished surfaces is executed by hand to within one-tenth of a millimetre.</div>
+      </div>
+      <div class="craft-item">
+        <div class="craft-num">04</div>
+        <div class="craft-name">Quality Control</div>
+        <div class="craft-desc">Before leaving Geneva, every Manifesto timepiece undergoes 21 days of testing across temperature extremes, water pressure, and positional accuracy. We reject 12% of movements — they are restarted from scratch.</div>
+      </div>
+      <div class="craft-item">
+        <div class="craft-num">05</div>
+        <div class="craft-name">Bespoke Service</div>
+        <div class="craft-desc">Our private atelier accepts 24 bespoke commissions each year. From meteorite dials to engraved portraits, each piece begins with a personal consultation in Geneva and culminates two years later.</div>
+      </div>
+      <div class="craft-item">
+        <div class="craft-num">06</div>
+        <div class="craft-name">Restoration</div>
+        <div class="craft-desc">Manifesto watches from 1892 still run in our restoration department. We maintain the original tooling and sourcing records for every movement ever produced — a promise of perpetual care.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="reveal" style="margin-bottom:56px;">
+        <div class="section-label">Our Materials</div>
+        <h3 class="section-title" style="font-size:clamp(24px,3.5vw,48px);">Only the <em>Finest</em></h3>
+      </div>
+      <div class="material-strip reveal">
+        <div class="material-item">
+          <div class="material-icon">Au</div>
+          <div class="material-name">18K Gold</div>
+          <div class="material-desc">Sourced from certified ethical mines, our gold alloys are custom-blended for colour consistency and hardness across every collection.</div>
+        </div>
+        <div class="material-item">
+          <div class="material-icon">◈</div>
+          <div class="material-name">Sapphire Crystal</div>
+          <div class="material-desc">Anti-reflective sapphire on all surfaces. Harder than any material except diamond, our crystals offer total clarity for a lifetime.</div>
+        </div>
+        <div class="material-item">
+          <div class="material-icon">⊕</div>
+          <div class="material-name">Alligator Leather</div>
+          <div class="material-desc">Hand-stitched straps from Louisiana alligator, tanned in Millau, France — the leather capital of the world. Each strap takes 6 hours.</div>
+        </div>
+        <div class="material-item">
+          <div class="material-icon">Ti</div>
+          <div class="material-name">Grade 5 Titanium</div>
+          <div class="material-desc">For sport collections, aircraft-grade titanium provides extraordinary strength at 40% less weight than steel, with hypoallergenic properties.</div>
+        </div>
+        <div class="material-item">
+          <div class="material-icon">✦</div>
+          <div class="material-name">Meteorite Dials</div>
+          <div class="material-desc">Our Cosmos series features genuine Gibeon meteorite dials — 4-billion-year-old iron-nickel crystals cut to 0.6mm thickness. Each pattern is unique to the universe.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="footer-logo">MANIFESTO</div><p>47 craftsmen. One atelier. Infinite patience.</p></div>
+      <div class="footer-col"><h4>Navigate</h4><ul>
+        <li><a href="#" onclick="navigateTo('home');return false;">Home</a></li>
+        <li><a href="#" onclick="navigateTo('collection');return false;">Collection</a></li>
+        <li><a href="#" onclick="navigateTo('heritage');return false;">Heritage</a></li>
+        <li><a href="#" onclick="navigateTo('contact');return false;">Contact</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Atelier</h4><ul>
+        <li><a href="#">The Craft</a></li><li><a href="#">Materials</a></li>
+        <li><a href="#">Bespoke</a></li><li><a href="#">Restoration</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Visits</h4><ul>
+        <li><a href="#">Geneva Manufactory</a></li><li><a href="#">Open Days</a></li>
+        <li><a href="#">Private Tours</a></li><li><a href="#">Book a Visit</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2024 Manifesto Timepieces.</div>
+      <div class="footer-gold-line">Time is the only true luxury.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════ CONTACT PAGE ═══════════════════════════ -->
+<div class="page" id="page-contact">
+  <section style="padding-top:160px;">
+    <div class="reveal" style="margin-bottom:70px;">
+      <div class="section-label">Get in Touch</div>
+      <h2 class="section-title">Visit Our <em>Maison</em></h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="contact-layout">
+      <div class="contact-info reveal">
+        <p>Whether you wish to acquire a Manifesto timepiece, commission a bespoke creation, or arrange a servicing appointment, our team of specialists is at your disposal. Every enquiry receives a personal response within 24 hours.</p>
+        <div class="contact-details">
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon">◈</div>
+            <div class="contact-detail-text">
+              <strong>Geneva Maison</strong>
+              12 Rue du Rhône, 1204 Geneva, Switzerland
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon">✆</div>
+            <div class="contact-detail-text">
+              <strong>Private Client Line</strong>
+              +41 22 000 1892 — Monday to Saturday, 10am–6pm CET
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon">✉</div>
+            <div class="contact-detail-text">
+              <strong>Email Enquiries</strong>
+              private@manifestotimepieces.com
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon">⊕</div>
+            <div class="contact-detail-text">
+              <strong>Boutique Locations</strong>
+              Geneva · Paris · Tokyo · New York · Dubai · Hong Kong
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form reveal">
+        <div class="form-title">Private Enquiry</div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Subject of Enquiry</label>
+          <select>
+            <option value="" disabled selected>Select an option</option>
+            <option>Purchase Enquiry</option>
+            <option>Bespoke Commission</option>
+            <option>Watch Servicing</option>
+            <option>Authentication</option>
+            <option>Boutique Visit</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell us about your interest..."></textarea>
+        </div>
+        <button class="form-submit" onclick="handleFormSubmit(this)">Send Enquiry</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="footer-logo">MANIFESTO</div><p>We welcome your enquiry. Every message is read by a human.</p></div>
+      <div class="footer-col"><h4>Navigate</h4><ul>
+        <li><a href="#" onclick="navigateTo('home');return false;">Home</a></li>
+        <li><a href="#" onclick="navigateTo('collection');return false;">Collection</a></li>
+        <li><a href="#" onclick="navigateTo('heritage');return false;">Heritage</a></li>
+        <li><a href="#" onclick="navigateTo('atelier');return false;">Atelier</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Boutiques</h4><ul>
+        <li><a href="#">Geneva</a></li><li><a href="#">Paris</a></li>
+        <li><a href="#">Tokyo</a></li><li><a href="#">New York</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul>
+        <li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Sale</a></li>
+        <li><a href="#">Cookies</a></li><li><a href="#">Authenticity</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2024 Manifesto Timepieces.</div>
+      <div class="footer-gold-line">Time is the only true luxury.</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ── Loader ──
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hide');
+      initReveal();
+    }, 2000);
+  });
+
+  // ── Custom Cursor ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+  (function animRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  // ── Nav Scroll ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Page Navigation ──
+  let currentPage = 'home';
+  function navigateTo(page) {
+    if (page === currentPage) return;
+    const transition = document.getElementById('pageTransition');
+    transition.classList.add('entering');
+    setTimeout(() => {
+      document.getElementById('page-' + currentPage).classList.remove('active');
+      document.getElementById('page-' + page).classList.add('active');
+      currentPage = page;
+      window.scrollTo(0, 0);
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === page);
+      });
+      transition.classList.remove('entering');
+      transition.classList.add('leaving');
+      setTimeout(() => { transition.classList.remove('leaving'); initReveal(); }, 400);
+    }, 380);
+  }
+
+  // ── Reveal on Scroll ──
+  function initReveal() {
+    const els = document.querySelectorAll('#page-' + currentPage + ' .reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    els.forEach(el => observer.observe(el));
+  }
+
+  // ── Live Watch Hands ──
+  function updateClock() {
+    const now = new Date();
+    const s = now.getSeconds() + now.getMilliseconds()/1000;
+    const m = now.getMinutes() + s/60;
+    const h = (now.getHours() % 12) + m/60;
+    const sd = document.getElementById('secondHand');
+    const md = document.getElementById('minuteHand');
+    const hd = document.getElementById('hourHand');
+    if (sd) sd.setAttribute('transform', `rotate(${s * 6}, 200, 260)`);
+    if (md) md.setAttribute('transform', `rotate(${m * 6}, 200, 260)`);
+    if (hd) hd.setAttribute('transform', `rotate(${h * 30}, 200, 260)`);
+  }
+  setInterval(updateClock, 50);
+  updateClock();
+
+  // ── Collection Filter ──
+  function filterWatches(btn, series) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cards = document.querySelectorAll('#watchesGrid .watch-card');
+    cards.forEach(card => {
+      const show = series === 'all' || card.dataset.series === series;
+      card.style.opacity = show ? '1' : '0.15';
+      card.style.transform = show ? 'scale(1)' : 'scale(0.97)';
+      card.style.transition = 'opacity 0.4s, transform 0.4s';
+    });
+  }
+
+  // ── Form Submit ──
+  function handleFormSubmit(btn) {
+    btn.textContent = 'Sending...';
+    btn.style.background = '#8a8070';
+    setTimeout(() => {
+      btn.textContent = '✓ Enquiry Sent';
+      btn.style.background = '#50c878';
+      btn.style.color = '#000';
+      setTimeout(() => {
+        btn.textContent = 'Send Enquiry';
+        btn.style.background = 'var(--gold)';
+        btn.style.color = 'var(--black)';
+      }, 3000);
+    }, 1500);
+  }
+</script>
+</body>
+</html>
